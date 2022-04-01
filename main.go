@@ -135,15 +135,16 @@ func usageAndExit(errmsg string) {
 func main() {
 	flag.Usage = func() {
 		w := flag.CommandLine.Output()
+		fmt.Fprintf(w, "weather displays the current weather of a city.\n\n")
 		fmt.Fprintf(w, "USAGE:\n")
-		fmt.Fprintf(w, "\tweather [OPTIONS] <CITY-NAME>\n")
+		fmt.Fprintf(w, "\tweather [OPTIONS] <CITY-NAME>\n\n")
 		fmt.Fprintf(w, "OPTIONS:\n")
 		flag.PrintDefaults()
 	}
 
 	opt := options{units: "metric"}
 
-	flag.StringVar(&opt.apiKey, "key", os.Getenv("OPENWEATHER_API_KEY"), "openweather api key (required)")
+	flag.StringVar(&opt.apiKey, "key", os.Getenv("OPENWEATHER_API_KEY"), "openweather api key")
 	flag.BoolVar(&opt.verbose, "v", false, "verbose output")
 
 	flag.Func("units", "units of measurement (metric|imperial)", func(value string) error {
