@@ -5,10 +5,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+	"time"
 )
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
@@ -101,6 +103,27 @@ func sendRequest(apiKey, cityName, units string) (*Weather, error) {
 	return w, nil
 }
 
+func display(w io.Writer, wt *Weather, opt *options) {
+	temperatureSymbol, windSpeedSymbol := "C", "m/s"
+	if opt.units == "imperial" {
+		temperatureSymbol, windSpeedSymbol = "F", "mi/h"
+	}
+
+	if opt.verbose {
+		t := time.Now().UTC().Add(time.Duration(wt.TimeZone) * time.Second)
+
+		fmt.Printf("%s %s\n", wt.CityName, t.Format(time.Stamp))
+		fmt.Printf("========================\n")
+		fmt.Printf("condition: %s\n", wt.Conditions)
+		fmt.Printf("temperature: %.0f °%s\n", wt.Temperature, temperatureSymbol)
+		fmt.Printf("pressure: %.0f hPa\n", wt.Pressure)
+		fmt.Printf("humidity: %.1f%%\n", wt.Humidity)
+		fmt.Printf("wind: %.0f° %.1f %s\n", wt.WindDegrees, wt.WindSpeed, windSpeedSymbol)
+	} else {
+		fmt.Printf("%s  %s  %0.f °%s\n", wt.CityName, wt.Conditions, wt.Temperature, temperatureSymbol)
+	}
+}
+
 func usageAndExit(errmsg string) {
 	if errmsg != "" {
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n\n", errmsg)
@@ -149,5 +172,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%+v\n", w)
+	display(os.Stdout, w, &opt)
 }
