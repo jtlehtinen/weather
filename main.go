@@ -53,30 +53,24 @@ func sendRequest(apiKey, cityName, units string) (*Weather, error) {
 	}
 
 	// API docs: https://openweathermap.org/current
-	type weather struct {
-		Main        string `json:"main"`
-		Description string `json:"description"`
-		Icon        string `json:"icon"`
-	}
-
-	type main struct {
-		Temperature float64 `json:"temp"`
-		Pressure    float64 `json:"pressure"`
-		Humidity    float64 `json:"humidity"`
-	}
-
-	type wind struct {
-		Speed   float64 `json:"speed"`
-		Degrees float64 `json:"deg"`
-	}
-
 	type response struct {
-		Weather    []weather `json:"weather"`
-		Main       main      `json:"main"`
-		Wind       wind      `json:"wind"`
-		Name       string    `json:"name"`
-		TimeZone   int       `json:"timezone"`
-		Visibility float64   `json:"visibility"`
+		Weather []struct {
+			Main        string `json:"main"`
+			Description string `json:"description"`
+			Icon        string `json:"icon"`
+		} `json:"weather"`
+		Main struct {
+			Temperature float64 `json:"temp"`
+			Pressure    float64 `json:"pressure"`
+			Humidity    float64 `json:"humidity"`
+		} `json:"main"`
+		Wind struct {
+			Speed   float64 `json:"speed"`
+			Degrees float64 `json:"deg"`
+		} `json:"wind"`
+		Name       string  `json:"name"`
+		TimeZone   int     `json:"timezone"`
+		Visibility float64 `json:"visibility"`
 	}
 
 	var res response
