@@ -36,11 +36,11 @@ type Weather struct {
 
 func makeRequestURL(cityName, units, apiKey string) string {
 	cityName = url.QueryEscape(cityName)
-	apiKey = url.QueryEscape(apiKey) // Just in case user inputs nonsense...
+	apiKey = url.QueryEscape(apiKey)
 	return fmt.Sprintf("%s?q=%s&units=%s&appid=%s", BASE_URL, cityName, units, apiKey)
 }
 
-func sendRequest(apiKey, cityName, units string) (*Weather, error) {
+func fetchWeather(apiKey, cityName, units string) (*Weather, error) {
 	u := makeRequestURL(cityName, units, apiKey)
 
 	resp, err := http.Get(u)
@@ -161,7 +161,7 @@ func main() {
 		usageAndExit("city name is required")
 	}
 
-	w, err := sendRequest(opt.apiKey, opt.cityName, opt.units)
+	w, err := fetchWeather(opt.apiKey, opt.cityName, opt.units)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
 		os.Exit(1)
