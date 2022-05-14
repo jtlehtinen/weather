@@ -1,10 +1,10 @@
 # weather
 
-Current weather from command line using OpenWeather API.
+Current weather from the command line using OpenWeather API.
 
 ## Usage
 
-Default value for API key is taken from OPENWEATHER_API_KEY environment variable.
+The default value for an API key is taken from the OPENWEATHER_API_KEY environment variable.
 
 ```
 $ weather -key <your-openweather-api-key> paris
