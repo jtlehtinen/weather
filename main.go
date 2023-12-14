@@ -104,10 +104,9 @@ func fetchWeather(apiKey, cityName, units string) (*Weather, error) {
 	return w, nil
 }
 
-func weatherIconToString(icon string) string {
-	// @TODO: Improve these...
+func weatherIconIdToEmoji(id string) string {
 	// https://openweathermap.org/weather-conditions
-	switch icon {
+	switch id {
 	case "01d":
 		return "☀️" // clear sky day
 	case "02d":
@@ -155,20 +154,20 @@ func display(w io.Writer, wt *Weather, opt *options) {
 		temperatureSymbol, windSpeedSymbol = "F", "mi/h"
 	}
 
-	weatherSymbol := weatherIconToString(wt.Icon)
+	weatherEmoji := weatherIconIdToEmoji(wt.Icon)
 
 	if opt.verbose {
 		t := time.Now().UTC().Add(time.Duration(wt.TimeZone) * time.Second)
 
 		fmt.Printf("%s %s\n", wt.CityName, t.Format(time.Stamp))
 		fmt.Printf("========================\n")
-		fmt.Printf("condition: %s %s\n", weatherSymbol, wt.Conditions)
+		fmt.Printf("condition: %s %s\n", weatherEmoji, wt.Conditions)
 		fmt.Printf("temperature: %.0f°%s\n", wt.Temperature, temperatureSymbol)
 		fmt.Printf("pressure: %.0f hPa\n", wt.Pressure)
 		fmt.Printf("humidity: %.1f%%\n", wt.Humidity)
 		fmt.Printf("wind: %.0f° %.1f %s\n", wt.WindDegrees, wt.WindSpeed, windSpeedSymbol)
 	} else {
-		fmt.Printf("%s %0.f°%s %s %s\n", wt.CityName, wt.Temperature, temperatureSymbol, weatherSymbol, wt.Conditions)
+		fmt.Printf("%s %0.f°%s %s %s\n", wt.CityName, wt.Temperature, temperatureSymbol, weatherEmoji, wt.Conditions)
 	}
 }
 
